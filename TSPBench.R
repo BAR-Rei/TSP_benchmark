@@ -8,7 +8,6 @@ n_of_cities(etsp)
 labels(etsp)
 ## plot ETSP and solution
 tour <- solve_TSP(etsp)
-a <- 3
 tour
 WAFA <- "wafa"
 WAFA
