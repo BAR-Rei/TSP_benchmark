@@ -46,34 +46,32 @@ k_opt <- function(x, k=2){
     } else {
       last <- length(indexList)
       if(indexList[last] == finalIndexValues[last]){
-        increment(indexList[-last])
+        indexList[-last]<-increment(indexList[-last])
         indexList[last]<-indexList[last-1]+1
       }else{
-        indexList[j]<-indexList[j]+1
+        indexList[last]<-(indexList[last]+1)
       }
     }
+    return(indexList)
   }
   
-  improvement <- FALSE
   initialIndexValues <- 2:(k+1)
   i<-initialIndexValues
-  finalIndexValues <- (length(x)-(k-1)):length(x)
+  finalIndexValues <- (nrow(x)-(k-1)):nrow(x)
+  new_x <- x
   while(or(i != finalIndexValues)){
     x_copy <- x
     temp <- x_copy[i[1], ]
-    for(j in i[-k]){
+    for(j in 1:(k-1)){
       x_copy[i[j], ] <- x_copy[i[j+1], ]
     }
     x_copy[i[k], ] <- temp
-    
     if(tourLen(x_copy) < tourLen(x)){
       new_x <- x_copy
-      improvement <- TRUE
     }
-    increment(i)
+    i<-increment(i)
   }
-  
-  return(improvement)
+  return(new_x)
 }
 
 
@@ -81,6 +79,7 @@ k_opt <- function(x, k=2){
 opt_2 <- function(x){
   improvement <- FALSE
   x_copy <- x
+  new_x <- x
   for(i in 2:(nrow(x_copy)-1)){
     for(j in (i+1):nrow(x_copy)){
       temp <- x_copy[i, ]
@@ -100,10 +99,12 @@ opt_2 <- function(x){
 
 
 data <- data.frame(x = sample(0:100, 5, replace=T), y = sample(0:100, 5, replace=T), row.names = 1:5)
+newData <- k_opt(data, 5)
 opt_2(data)
+tourLen(newData)
+tourLen(data)
 data
 toConcordeFile(data)
-
 
 
 ## create a TSP
