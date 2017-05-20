@@ -74,30 +74,6 @@ k_opt <- function(x, k=2){
   return(new_x)
 }
 
-
-# applique 2_opt et retourne vrai s'il trouve un meilleur tour, faux sinon
-opt_2 <- function(x){
-  improvement <- FALSE
-  x_copy <- x
-  new_x <- x
-  for(i in 2:(nrow(x_copy)-1)){
-    for(j in (i+1):nrow(x_copy)){
-      temp <- x_copy[i, ]
-      x_copy[i, ] <- x_copy[j, ]
-      x_copy[j, ] <- temp
-      if(tourLen(x_copy) < tourLen(x)){
-        new_x <- x_copy
-        improvement <- TRUE
-      }
-    }
-  }
-  x<-new_x
-  return(improvement)
-}
-
-
-
-
 data <- data.frame(x = sample(0:100, 5, replace=T), y = sample(0:100, 5, replace=T), row.names = 1:5)
 newData <- k_opt(data, 5)
 opt_2(data)
