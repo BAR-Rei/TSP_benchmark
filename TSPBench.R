@@ -9,6 +9,4 @@ labels(etsp)
 ## plot ETSP and solution
 tour <- solve_TSP(etsp)
 tour
-WAFA <- "wafa"
-WAFA
 plot(etsp, tour, tour_col = "red")
