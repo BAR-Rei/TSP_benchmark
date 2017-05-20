@@ -126,3 +126,44 @@ toConcordeFile(data)
 dist(data, method = "euclidean", diag = T, upper = FALSE, p = 2)
 dist
 
+
+
+#générer 20 fichiers
+set.seed(100)
+data <- data.frame(x = sample(0:100, 15, replace=T), y = sample(0:100, 15, replace=T), row.names = 1:15)
+toConcordeFile(data,paste("C:/Users/wafa_/Desktop/samples/ConcordeFile1.tsp"))
+
+n<- 30
+for (i in 2:20){
+  data <- data.frame(x = sample(0:100, n, replace=T), y = sample(0:100, n, replace=T), row.names = 1:n)
+  toConcordeFile(data,paste("C:/Users/wafa_/Desktop/samples/ConcordeFile",i,".tsp"))
+  n <- n + 10
+}
+
+#tour aléaroirs
+set.seed(100)
+n<- 30
+for (i in 2:20){
+  data <- data.frame(x = sample(0:100, n, replace=T), y = sample(0:100, n, replace=T), row.names = 1:n)
+  randTourLen(data)
+  n <- n + 10
+}
+randTourLen(data <- data.frame(x = sample(0:100, 15, replace=T), y = sample(0:100, 15, replace=T), row.names = 1:15))
+
+randTourLen<-function(data){
+  data2 <- rbind(data[1,],data[sample(2:nrow(data)),])
+  len <- tourLen(data2)
+  return(len)
+}
+
+
+tourLen <- function(data2){
+  somme <- 0
+  for (i in 1:(nrow(data2)-1)){
+    p <- rbind(data2[i,],data2[i+1,])
+    somme <- somme + dist(p)
+  }
+  d <- rbind(data2[1,],data2[nrow(data2),])
+  somme <- somme + dist(d)
+  return(somme)
+}
