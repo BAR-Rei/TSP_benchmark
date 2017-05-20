@@ -1,3 +1,6 @@
+install.packages("TSP")
+library(TSP)
+
 x <- data.frame(x = runif(20, min=0, max=100), y = runif(20, min=0, max=100), row.names = seq(1,20))
 ## create a TSP
 etsp <- ETSP(x)
