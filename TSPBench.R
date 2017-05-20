@@ -4,7 +4,7 @@ library(TSP)
 concorde_path("C:/Program Files (x86)/Concorde")
 
 # ecrit un TSP dans un fichier aux normes Concorde
-toConcordeFile <- function(x, filename = "ConcordeFile.tsp"){
+toConcordeFile <- function(x, filename = "C:/Users/wafa_/Desktop/ConcordeFile.tsp"){
   dimension = nrow(x)
   header <- paste("NAME: concorde91
 TYPE: TSP
@@ -16,6 +16,19 @@ NODE_COORD_SECTION")
     write(c(i, as.matrix(x[i, ])), file=filename, append = TRUE)
   }
 }
+
+tourLen <- function(data2){
+  somme <- 0
+  for (i in 1:(nrow(data2)-1)){
+    p <- rbind(data2[i,],data2[i+1,])
+    somme <- somme + dist(p)
+  }
+  d <- rbind(data2[1,],data2[nrow(data2),])
+  somme <- somme + dist(d)
+  print(somme)
+  return(somme)
+}
+
 
 # applique 2_opt et retourne vrai s'il trouve un meilleur tour, faux sinon
 opt_2 <- function(x){
@@ -36,7 +49,15 @@ opt_2 <- function(x){
 }
 
 
-data <- data.frame(x = sample(0:100, 100, replace=T), y = sample(0:100, 100, replace=T), row.names = 1:100)
+
+
+data <- data.frame(x = sample(0:100, 5, replace=T), y = sample(0:100, 5, replace=T), row.names = 1:5)
+opt_2(data)
+data
+toConcordeFile(data)
+
+
+
 ## create a TSP
 data
 etsp <- ETSP(data)
