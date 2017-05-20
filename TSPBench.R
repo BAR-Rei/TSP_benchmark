@@ -40,6 +40,20 @@ k_opt <- function(x, k=2){
     return(FALSE)
   }
   
+  increment<-function(indexList){
+    if(length(indexList)==1){
+      indexList[1] <- indexList[1] + 1
+    } else {
+      last <- length(indexList)
+      if(indexList[last] == finalIndexValues[last]){
+        increment(indexList[-last])
+        indexList[last]<-indexList[last-1]+1
+      }else{
+        indexList[j]<-indexList[j]+1
+      }
+    }
+  }
+  
   improvement <- FALSE
   initialIndexValues <- 2:(k+1)
   i<-initialIndexValues
@@ -56,19 +70,12 @@ k_opt <- function(x, k=2){
       new_x <- x_copy
       improvement <- TRUE
     }
-    
-    for(j in k:1){
-      if(i[j] == finalIndexValues[j]){
-        i[j]<-initialIndexValues[j]
-      }else{
-        i[j]<-i[j]+1
-        break()
-      }
-    }
+    increment(i)
   }
   
   return(improvement)
 }
+
 
 # applique 2_opt et retourne vrai s'il trouve un meilleur tour, faux sinon
 opt_2 <- function(x){
