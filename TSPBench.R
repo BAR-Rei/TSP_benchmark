@@ -35,7 +35,7 @@ opt_2 <- function(x){
   improvement <- FALSE
   x_copy <- data.frame(x)
   for(i in 2:nrow(x_copy)){
-    for(j in i:nrow(x_copy)){
+    for(j in (i+1):nrow(x_copy)){
       temp <- x_copy[i, ]
       x_copy[i, ] <- x_copy[j, ]
       x_copy[j, ] <- temp
