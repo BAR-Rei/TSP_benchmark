@@ -17,6 +17,24 @@ NODE_COORD_SECTION")
   }
 }
 
+# applique 2_opt et retourne vrai s'il trouve un meilleur tour, faux sinon
+opt_2 <- function(x){
+  improvement <- FALSE
+  x_copy <- data.frame(x)
+  for(i in 2:nrow(x_copy)){
+    for(j in i:nrow(x_copy)){
+      temp <- x_copy[i, ]
+      x_copy[i, ] <- x_copy[j, ]
+      x_copy[j, ] <- temp
+      if(tourLen(x_copy) < tourLen(x)){
+        x <- x_copy
+        improvement <- TRUE
+      }
+    }
+  }
+  return(improvement)
+}
+
 
 data <- data.frame(x = sample(0:100, 100, replace=T), y = sample(0:100, 100, replace=T), row.names = 1:100)
 ## create a TSP
