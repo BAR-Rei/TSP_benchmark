@@ -1,5 +1,8 @@
 install.packages("TSP")
 library(TSP)
+concorde_path("C:/Program Files (x86)/Concorde")
+
+
 data <- data.frame(x = sample(0:100, 100, replace=T), y = sample(0:100, 100, replace=T), row.names = 1:100)
 ## create a TSP
 data
