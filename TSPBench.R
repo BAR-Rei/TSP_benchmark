@@ -1,6 +1,7 @@
-x <- data.frame(x = runif(20, min=0, max=100), y = runif(20, min=0, max=100), row.names = seq(1,20))
+data <- data.frame(x = sample(0:100, 100, replace=T), y = sample(0:100, 100, replace=T), row.names = 1:100)
 ## create a TSP
-etsp <- ETSP(x)
+data
+etsp <- ETSP(data)
 etsp
 #as.matrix(etsp)
 ## use some methods
@@ -8,8 +9,11 @@ n_of_cities(etsp)
 labels(etsp)
 ## plot ETSP and solution
 tour <- solve_TSP(etsp)
-a <- 3
 tour
-WAFA <- "wafa"
-WAFA
 plot(etsp, tour, tour_col = "red")
+
+
+
+#distance euclidienne
+dist(data, method = "euclidean", diag = T, upper = FALSE, p = 2)
+dist
