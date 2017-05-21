@@ -119,8 +119,8 @@ randTourLen<-function(data){
   return(len)
 }
 for (i in 1:20){
-  data <- data.frame(x = sample(0:100, 25, replace=T), y = sample(0:100, 25, replace=T), row.names = 1:25)
-  #toConcordeFile(data,paste("C:/Users/wafa_/TSP_benchmark/samples 25/ConcordeFile",i,".tsp"))
+  data <- data.frame(x = sample(0:100, 15, replace=T), y = sample(0:100, 15, replace=T), row.names = 1:15)
+  toConcordeFile(data,paste("C:/Users/wafa_/TSP_benchmark/samples 15/ConcordeFile",i,".tsp"))
   randTourLen(data)
 }
 
