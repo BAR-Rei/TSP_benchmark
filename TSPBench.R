@@ -4,7 +4,7 @@ library(TSP)
 concorde_path("C:/Program Files (x86)/Concorde")
 
 # ecrit un TSP dans un fichier aux normes Concorde
-toConcordeFile <- function(x, filename = "C:/Users/wafa_/Desktop/ConcordeFile.tsp"){
+toConcordeFile <- function(x, filename = "C:/Users/wafa_/TSP_benchmark/ConcordeFile.tsp"){
   dimension = nrow(x)
   header <- paste("NAME: concorde91
 TYPE: TSP
@@ -120,7 +120,7 @@ randTourLen<-function(data){
 }
 for (i in 1:20){
   data <- data.frame(x = sample(0:100, 25, replace=T), y = sample(0:100, 25, replace=T), row.names = 1:25)
-  #toConcordeFile(data,paste("C:/Users/wafa_/Desktop/samples 25/ConcordeFile",i,".tsp"))
+  #toConcordeFile(data,paste("C:/Users/wafa_/TSP_benchmark/samples 25/ConcordeFile",i,".tsp"))
   randTourLen(data)
 }
 
@@ -150,9 +150,8 @@ readDf <- function(f){
 }
 
 for (i in 1:20){
-  readDf(paste("C:/Users/wafa_/Desktop/samples 25/ConcordeFile",i,".tsp"))
+  readDf(paste("C:/Users/wafa_/TSP_benchmark/samples 25/ConcordeFile",i,".tsp"))
 }
-
 
 
 ?tsp
