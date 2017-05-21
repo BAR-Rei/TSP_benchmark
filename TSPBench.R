@@ -120,23 +120,8 @@ n<- 30
 for (i in 2:20){
   data <- data.frame(x = sample(0:100, n, replace=T), y = sample(0:100, n, replace=T), row.names = 1:n)
   toConcordeFile(data,paste("C:/Users/wafa_/Desktop/samples/ConcordeFile",i,".tsp"))
+  
   n <- n + 10
-}
-
-#tour aléaroirs
-set.seed(100)
-n<- 30
-for (i in 2:20){
-  data <- data.frame(x = sample(0:100, n, replace=T), y = sample(0:100, n, replace=T), row.names = 1:n)
-  randTourLen(data)
-  n <- n + 10
-}
-randTourLen(data <- data.frame(x = sample(0:100, 15, replace=T), y = sample(0:100, 15, replace=T), row.names = 1:15))
-
-randTourLen<-function(data){
-  data2 <- rbind(data[1,],data[sample(2:nrow(data)),])
-  len <- tourLen(data2)
-  return(len)
 }
 
 
