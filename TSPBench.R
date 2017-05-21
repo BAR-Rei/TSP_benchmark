@@ -82,7 +82,7 @@ k_opt <- function(x, k=2){
 variableNeighbourhoodSearch <- function(x){
   #x_copy doit etre different de x mais de meme longueur
   #pour rentrer dans le while parce que pas de do/while
-  startTime <- proc.time()
+  startTime <- Sys.time()
   nIterations <- 0
   x_copy <- x+1
   while(!all(x_copy == x)){
@@ -93,8 +93,7 @@ variableNeighbourhoodSearch <- function(x){
       x_copy <- k_opt(x, 3)
     }
   }
-  print(proc.time() - startTime)
-  return(list(data = x, time = proc.time() - startTime, iterations = nIterations))
+  return(list(data = x, time = Sys.time() - startTime, iterations = nIterations))
 }
 
 #taille d'un tour aleatoire
@@ -117,7 +116,6 @@ benchTSPsForN <- function(n, it=20){
   vNTimes <- c()
   vNIt <- c()
   for(i in 1:it){
-    print(i)
     data <- tspFromFile(paste("C:/Users/Syncrossus/Documents/GitHub/TSP_benchmark/samples", n, "/","ConcordeFile",i,".tsp", sep = ""), n)
     optimalIndexes <- tspFromCyc(paste("C:/Users/Syncrossus/Documents/GitHub/TSP_benchmark/samples", n, "/",i,".cyc", sep = ""), n)
     optimalIndexes <- optimalIndexes+1 # on passe d'indices debutant a 0 a des indices debutant a 1
@@ -130,7 +128,7 @@ benchTSPsForN <- function(n, it=20){
     vNTimes <- c(vNTimes, vNTour$time)
     vNIt <- c(vNIt, vNTour$iterations)
   }
-  return(list(randomDist = mean(randomTours), optDist = mean(optTours), vnDist = mean(vNTours), vnTime = mean(vNTimes), vNIterations = mean(vNIt)))
+  return(list(randomDist = randomTours, optDist = optTours, vnDist = vNTours, vnTime = vNTimes, vNIterations = vNIt))
 }
 
 generateTSPsForN(15)
@@ -138,7 +136,6 @@ generateTSPsForN(25)
 
 data15 <- benchTSPsForN(15)
 data25 <- benchTSPsForN(25)
-
 
 
 
