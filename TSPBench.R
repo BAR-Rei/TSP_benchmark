@@ -150,3 +150,78 @@ tourLen <- function(data2){
   somme <- somme + dist(d)
   return(somme)
 }
+
+
+#generation des fichiers et  tour alearoirs
+set.seed(100)
+randTourLen<-function(data){
+  data2 <- rbind(data[1,],data[sample(2:nrow(data)),])
+  len <- tourLen(data2)
+  print(len)
+  return(len)
+}
+for (i in 1:20){
+  data <- data.frame(x = sample(0:100, 25, replace=T), y = sample(0:100, 25, replace=T), row.names = 1:25)
+  #toConcordeFile(data,paste("C:/Users/wafa_/Desktop/samples 25/ConcordeFile",i,".tsp"))
+  randTourLen(data)
+}
+
+tourLen <- function(data2){
+  somme <- 0
+  for (i in 1:(nrow(data2)-1)){
+    p <- rbind(data2[i,],data2[i+1,])
+    somme <- somme + dist(p)
+  }
+  d <- rbind(data2[1,],data2[nrow(data2),])
+  somme <- somme + dist(d)
+  return(somme)
+}
+
+
+
+
+# read All files
+readDf <- function(f){
+  con<-file(f)
+  open(con)
+  ab <- read.table(con,skip=5,nrow=25) #6-th line
+  close(con)
+  d <- data.frame(ab$V2,ab$V3)
+  # print("ok")
+  return (d)
+}
+
+for (i in 1:20){
+  readDf(paste("C:/Users/wafa_/Desktop/samples 25/ConcordeFile",i,".tsp"))
+}
+
+
+
+?tsp
+tsp<- TSP(dist(ab, method = "euclidean", diag = T, upper = FALSE, p = 2))
+ab
+tsp
+tour<-solve_TSP(tsp, method = "linkern", control = c("-V"))
+tour
+linkern_help()
+typeof(tour)
+image(tsp)
+tour
+t <- c()
+for (i in 1:40){
+  t <- c(t,tour[[i]])
+}
+t
+
+
+dataSorted <-ab[match(t, row(ab)),]
+dataSorted <- rbind(dataSorted,dataSorted[1,])
+dataSorted
+plot(x=dataSorted$V2,y=dataSorted$V3,type='b',xlab='X',ylab='Y')
+
+plot(tsp, tour, tour_col = "red")
+plot(data, tour, cex=.6, col = "red", pch= 3, main = "TSPLIB: d493")
+d <- dist(data, method = "euclidean", diag = T, upper = FALSE, p = 2)
+tsp
+tsp <- insert_dummy(d, label = "cut")
+tsp
