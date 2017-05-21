@@ -58,7 +58,7 @@ k_opt <- function(x, k=2){
   initialIndexValues <- 2:(k+1)
   i<-initialIndexValues
   finalIndexValues <- (nrow(x)-(k-1)):nrow(x)
-  new_x <- x
+  
   while(or(i != finalIndexValues)){
     x_copy <- x
     temp <- x_copy[i[1], ]
@@ -67,16 +67,23 @@ k_opt <- function(x, k=2){
     }
     x_copy[i[k], ] <- temp
     if(tourLen(x_copy) < tourLen(x)){
-      new_x <- x_copy
+      return(x_copy)
     }
     i<-increment(i)
   }
-  return(new_x)
+  return(x)
 }
 
-data <- data.frame(x = sample(0:100, 5, replace=T), y = sample(0:100, 5, replace=T), row.names = 1:5)
-newData <- k_opt(data, 5)
-opt_2(data)
+data <- data.frame(x = sample(0:100, 25, replace=T), y = sample(0:100, 25, replace=T), row.names = 1:25)
+newData<-data
+newData2 <- newData+1
+while(!all(newData == newData2)){
+  newData <- newData2
+  newData2 <- k_opt(newData, 2)
+  if(all(newData == newData2)){
+    newData2 <- k_opt(newData, 3)
+  }
+}
 tourLen(newData)
 tourLen(data)
 data
