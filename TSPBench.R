@@ -1,11 +1,6 @@
-install.packages("TSP")
-library(TSP)
-# chemin vers l'executable Concorde
-concorde_path("C:/Program Files (x86)/Concorde")
-
 # ecrit un TSP dans un fichier aux normes Concorde
 # parce que TSPLIB fait n'importe quoi
-tspToFile <- function(x, filename = "C:/Users/wafa_/TSP_benchmark/ConcordeFile.tsp"){
+tspToFile <- function(x, filename = "ConcordeFile.tsp"){
   dimension = nrow(x)
   header <- paste("NAME: concorde
 TYPE: TSP
@@ -18,13 +13,21 @@ NODE_COORD_SECTION")
   }
 }
 
-tspFromFile <- function(filename){
-  con<-file(f)
+tspFromFile <- function(filename, rows=25){
+  con<-file(filename)
   open(con)
-  ab <- read.table(con,skip=5,nrow=25) #6-th line
+  ab <- read.table(con,skip=5,nrow=rows) #6-th line
   close(con)
   d <- data.frame(ab$V2,ab$V3)
-  # print("ok")
+  return (d)
+}
+
+tspFromCyc <- function(filename, rows=25){
+  con<-file(filename)
+  open(con)
+  ab <- read.table(con, nrow=rows)
+  close(con)
+  d <- data.frame(ab$V1)
   return (d)
 }
 
@@ -37,8 +40,7 @@ tourLen <- function(data){
   }
   d <- rbind(data[1,],data[nrow(data),])
   somme <- somme + dist(d)
-  print(somme)
-  return(somme)
+  return(somme[1])
 }
 
 # applique k_opt et retourne vrai s'il trouve un meilleur tour, faux sinon
@@ -77,18 +79,22 @@ k_opt <- function(x, k=2){
   return(x)
 }
 
-rechercheVoisinagesVariables <- function(x){
+variableNeighbourhoodSearch <- function(x){
   #x_copy doit etre different de x mais de meme longueur
   #pour rentrer dans le while parce que pas de do/while
+  startTime <- proc.time()
+  nIterations <- 0
   x_copy <- x+1
   while(!all(x_copy == x)){
+    nIterations <- nIterations + 1
     x <- x_copy
     x_copy <- k_opt(x, 2)
     if(all(x == x_copy)){
       x_copy <- k_opt(x, 3)
     }
   }
-  return(x)
+  print(proc.time() - startTime)
+  return(list(data = x, time = proc.time() - startTime, iterations = nIterations))
 }
 
 #taille d'un tour aleatoire
@@ -96,64 +102,45 @@ randTourLen<-function(data){
   return(tourLen(rbind(data[1,],data[sample(2:nrow(data)),])))
 }
 
-
-
-
-for (i in 1:20){
-  data <- data.frame(x = sample(0:100, 25, replace=T), y = sample(0:100, 25, replace=T), row.names = 1:25)
-  tspToFile(data,paste("C:/Users/wafa_/TSP_benchmark/samples 25/ConcordeFile",i,".tsp"))
-  newData <- rechercheVoisinagesVariables(data)
-  tourLen(newData)
-  randTourLen(data)
+generateTSPsForN <- function(n, it=20){
+  for(i in 1:it){
+    data <- data.frame(x = sample(0:100, n, replace=T), y = sample(0:100, n, replace=T), row.names = 1:n)
+    tspToFile(data, paste("C:/Users/wafa_/TSP_benchmark/samples", n, "/ConcordeFile",i,".tsp", sep = ""))
+  }
 }
 
-# read All files
-
-
-for (i in 1:20){
-  data <- tspFromFile(paste("C:/Users/Syncrossus/Documents/GitHub/TSP_benchmark/samples 25/ConcordeFile",i,".tsp"))
-  
+benchTSPsForN <- function(n, it=20){
+  randomTours <- c()
+  optTours <- c()
+  #vN stands for variable neighbourhood
+  vNTours <- c()
+  vNTimes <- c()
+  vNIt <- c()
+  for(i in 1:it){
+    print(i)
+    data <- tspFromFile(paste("C:/Users/Syncrossus/Documents/GitHub/TSP_benchmark/samples", n, "/","ConcordeFile",i,".tsp", sep = ""), n)
+    optimalIndexes <- tspFromCyc(paste("C:/Users/Syncrossus/Documents/GitHub/TSP_benchmark/samples", n, "/",i,".cyc", sep = ""), n)
+    optimalIndexes <- optimalIndexes+1 # on passe d'indices debutant a 0 a des indices debutant a 1
+    dataOptimal <- data[match(optimalIndexes, row(data)),]
+    
+    randomTours <- c(randomTours, randTourLen(data))
+    optTours <- c(optTours, tourLen(data))
+    vNTour <- variableNeighbourhoodSearch(data)
+    vNTours <- c(vNTours, tourLen(vNTour$data))
+    vNTimes <- c(vNTimes, vNTour$time)
+    vNIt <- c(vNIt, vNTour$iterations)
+  }
+  return(list(randomDist = mean(randomTours), optDist = mean(optTours), vnDist = mean(vNTours), vnTime = mean(vNTimes), vNIterations = mean(vNIt)))
 }
 
+generateTSPsForN(15)
+generateTSPsForN(25)
+
+data15 <- benchTSPsForN(15)
+data25 <- benchTSPsForN(25)
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-?tsp
-tsp<- TSP(dist(ab, method = "euclidean", diag = T, upper = FALSE, p = 2))
-ab
-tsp
-tour<-solve_TSP(tsp, method = "linkern", control = c("-V"))
-tour
-linkern_help()
-typeof(tour)
-image(tsp)
-tour
-t <- c()
-for (i in 1:40){
-  t <- c(t,tour[[i]])
-}
-t
-
-
-dataSorted <-ab[match(t, row(ab)),]
-dataSorted <- rbind(dataSorted,dataSorted[1,])
-dataSorted
-plot(x=dataSorted$V2,y=dataSorted$V3,type='b',xlab='X',ylab='Y')
-
-plot(tsp, tour, tour_col = "red")
-plot(data, tour, cex=.6, col = "red", pch= 3, main = "TSPLIB: d493")
-d <- dist(data, method = "euclidean", diag = T, upper = FALSE, p = 2)
-tsp
-tsp <- insert_dummy(d, label = "cut")
-tsp
