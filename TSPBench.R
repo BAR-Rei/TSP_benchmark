@@ -82,7 +82,7 @@ k_opt <- function(x, k=2){
 variableNeighbourhoodSearch <- function(x){
   #x_copy doit etre different de x mais de meme longueur
   #pour rentrer dans le while parce que pas de do/while
-  startTime <- Sys.time()
+  startTime <- as.numeric(Sys.time())
   nIterations <- 0
   x_copy <- x+1
   while(!all(x_copy == x)){
@@ -93,7 +93,7 @@ variableNeighbourhoodSearch <- function(x){
       x_copy <- k_opt(x, 3)
     }
   }
-  return(list(data = x, time = Sys.time() - startTime, iterations = nIterations))
+  return(list(data = x, time = as.numeric(Sys.time()) - startTime, iterations = nIterations))
 }
 
 #taille d'un tour aleatoire
@@ -149,4 +149,5 @@ data25 <- benchTSPsForN(25)
 
 write.csv2(x = data15, file = "data15.csv", dec = '.')
 write.csv2(x = data25, file = "data25.csv", dec = '.')
+
 
