@@ -38,7 +38,7 @@ data25.csv contient la comparaison de performances pour 20 TSP de taille 25.
 Exécutez TSPGenerate.R pour générer des fichiers TSPLIB aléatoires utilisables par Concorde (et la plupart des autres solveurs de TSP).
 Exécutez seulement TSPGenerate.R si vous avez une installation de Concorde qui fonctionne et êtes prêt à générer les fichiers de tour optimal à la main.
 Après avoir exécuté TSPGenerate.R, les fichiers TSP seront dans /samples15 pour les TSP de taille 15 et /samples25 pour les TSP de taille 25.
-Utilisez Concorde pour générer le fichier de tour optimal pour chaque fichier ConcordeFile<i>.tsp et enregistrez-le sous le nom <i>.cyc.
+Utilisez Concorde pour générer le fichier de tour optimal pour chaque fichier ConcordeFile\<i\>.tsp et enregistrez-le sous le nom \<i\>.cyc.
 Cela peut être automatisé avec un langage de script d'automatisation de GUI tel que [AutoIT] (https://www.autoitscript.com/site/autoit/).
 
 
@@ -81,5 +81,5 @@ Labels in the CSV files:
 run TSPGenerate.R to generate random TSPLIB files usable by Concorde (and most other TSP solvers).
 Only run TSPGenerate.R if you have a working installation of Concorde and are willing to generate the optimal tour files by hand.
 After having run TSPGenerate.R, the TSP files will be in /samples15 for the TSPs of size 15 and in /samples25 for the TSPs of size 25.
-Use Concorde to generate the optimal tours for each ConcordeFile<i>.tsp file and save them as <i>.cyc.
+Use Concorde to generate the optimal tours for each ConcordeFile\<i\>.tsp file and save them as \<i\>.cyc.
 This can be automated with a GUI automation scripting language such as [AutoIT](https://www.autoitscript.com/site/autoit/).
