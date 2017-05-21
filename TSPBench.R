@@ -119,7 +119,7 @@ benchTSPsForN <- function(n, it=20){
     data <- tspFromFile(paste("C:/Users/Syncrossus/Documents/GitHub/TSP_benchmark/samples", n, "/","ConcordeFile",i,".tsp", sep = ""), n)
     optimalIndexes <- tspFromCyc(paste("C:/Users/Syncrossus/Documents/GitHub/TSP_benchmark/samples", n, "/",i,".cyc", sep = ""), n)
     optimalIndexes <- optimalIndexes+1 # on passe d'indices debutant a 0 a des indices debutant a 1
-    dataOptimal <- data[match(optimalIndexes, row(data)),]
+    dataOptimal <- data[optimalIndexes,]
     
     randomTours <- c(randomTours, randTourLen(data))
     optTours <- c(optTours, tourLen(data))
@@ -131,13 +131,22 @@ benchTSPsForN <- function(n, it=20){
   return(list(randomDist = randomTours, optDist = optTours, vnDist = vNTours, vnTime = vNTimes, vNIterations = vNIt))
 }
 
+####################################################
+# Ne generez les donnees que si vous avez concorde #
+#Il faudra que vous utilisiez l'interface graphique#
+#    pour resoudre les TSP a la main un par un     #
+####################################################
 generateTSPsForN(15)
 generateTSPsForN(25)
 
+
+####################################################
+#   vous pouvez lancer le script a partir d'ici,   #
+#   Il utilisera les donnees que nous avons cree   #
+####################################################
 data15 <- benchTSPsForN(15)
 data25 <- benchTSPsForN(25)
 
-
-
-
+write.csv2(x = data15, file = "data15.csv", dec = '.')
+write.csv2(x = data25, file = "data25.csv", dec = '.')
 
