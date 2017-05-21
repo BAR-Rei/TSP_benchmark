@@ -4,9 +4,10 @@ library(TSP)
 concorde_path("C:/Program Files (x86)/Concorde")
 
 # ecrit un TSP dans un fichier aux normes Concorde
-toConcordeFile <- function(x, filename = "C:/Users/wafa_/TSP_benchmark/ConcordeFile.tsp"){
+# parce que TSPLIB fait n'importe quoi
+tspToFile <- function(x, filename = "C:/Users/wafa_/TSP_benchmark/ConcordeFile.tsp"){
   dimension = nrow(x)
-  header <- paste("NAME: concorde91
+  header <- paste("NAME: concorde
 TYPE: TSP
 DIMENSION:", as.character(dimension),"
 EDGE_WEIGHT_TYPE: EUC_2D
@@ -17,13 +18,24 @@ NODE_COORD_SECTION")
   }
 }
 
-tourLen <- function(data2){
+tspFromFile <- function(filename){
+  con<-file(f)
+  open(con)
+  ab <- read.table(con,skip=5,nrow=25) #6-th line
+  close(con)
+  d <- data.frame(ab$V2,ab$V3)
+  # print("ok")
+  return (d)
+}
+
+# Longueur d'un tour
+tourLen <- function(data){
   somme <- 0
-  for (i in 1:(nrow(data2)-1)){
-    p <- rbind(data2[i,],data2[i+1,])
+  for (i in 1:(nrow(data)-1)){
+    p <- rbind(data[i,],data[i+1,])
     somme <- somme + dist(p)
   }
-  d <- rbind(data2[1,],data2[nrow(data2),])
+  d <- rbind(data[1,],data[nrow(data),])
   somme <- somme + dist(d)
   print(somme)
   return(somme)
@@ -31,15 +43,6 @@ tourLen <- function(data2){
 
 # applique k_opt et retourne vrai s'il trouve un meilleur tour, faux sinon
 k_opt <- function(x, k=2){
-  or <- function(array){
-    for(i in array){
-      if(i){
-        return(TRUE)
-      }
-    }
-    return(FALSE)
-  }
-  
   increment<-function(indexList){
     if(length(indexList)==1){
       indexList[1] <- indexList[1] + 1
@@ -59,7 +62,7 @@ k_opt <- function(x, k=2){
   i<-initialIndexValues
   finalIndexValues <- (nrow(x)-(k-1)):nrow(x)
   
-  while(or(i != finalIndexValues)){
+  while(!all(i == finalIndexValues)){
     x_copy <- x
     temp <- x_copy[i[1], ]
     for(j in 1:(k-1)){
@@ -74,84 +77,56 @@ k_opt <- function(x, k=2){
   return(x)
 }
 
-data <- data.frame(x = sample(0:100, 25, replace=T), y = sample(0:100, 25, replace=T), row.names = 1:25)
-newData<-data
-newData2 <- newData+1
-while(!all(newData == newData2)){
-  newData <- newData2
-  newData2 <- k_opt(newData, 2)
-  if(all(newData == newData2)){
-    newData2 <- k_opt(newData, 3)
+rechercheVoisinagesVariables <- function(x){
+  #x_copy doit etre different de x mais de meme longueur
+  #pour rentrer dans le while parce que pas de do/while
+  x_copy <- x+1
+  while(!all(x_copy == x)){
+    x <- x_copy
+    x_copy <- k_opt(x, 2)
+    if(all(x == x_copy)){
+      x_copy <- k_opt(x, 3)
+    }
   }
+  return(x)
 }
-tourLen(newData)
-tourLen(data)
-data
-toConcordeFile(data)
 
-
-## create a TSP
-data
-etsp <- ETSP(data)
-etsp
-#as.matrix(etsp)
-## use some methods
-n_of_cities(etsp)
-labels(etsp)
-## plot ETSP and solution
-tour <- solve_TSP(etsp)
-tour
-plot(etsp, tour, tour_col = "red")
-
-toConcordeFile(data)
-
-#distance euclidienne
-dist(data, method = "euclidean", diag = T, upper = FALSE, p = 2)
-dist
-
-
-#generation des fichiers et  tour alearoirs
-set.seed(100)
+#taille d'un tour aleatoire
 randTourLen<-function(data){
-  data2 <- rbind(data[1,],data[sample(2:nrow(data)),])
-  len <- tourLen(data2)
-  print(len)
-  return(len)
+  return(tourLen(rbind(data[1,],data[sample(2:nrow(data)),])))
 }
+
+
+
+
 for (i in 1:20){
   data <- data.frame(x = sample(0:100, 25, replace=T), y = sample(0:100, 25, replace=T), row.names = 1:25)
-  #toConcordeFile(data,paste("C:/Users/wafa_/TSP_benchmark/samples 25/ConcordeFile",i,".tsp"))
+  tspToFile(data,paste("C:/Users/wafa_/TSP_benchmark/samples 25/ConcordeFile",i,".tsp"))
+  newData <- rechercheVoisinagesVariables(data)
+  tourLen(newData)
   randTourLen(data)
 }
 
-tourLen <- function(data2){
-  somme <- 0
-  for (i in 1:(nrow(data2)-1)){
-    p <- rbind(data2[i,],data2[i+1,])
-    somme <- somme + dist(p)
-  }
-  d <- rbind(data2[1,],data2[nrow(data2),])
-  somme <- somme + dist(d)
-  return(somme)
-}
-
-
-
-
 # read All files
-readDf <- function(f){
-  con<-file(f)
-  open(con)
-  ab <- read.table(con,skip=5,nrow=25) #6-th line
-  close(con)
-  d <- data.frame(ab$V2,ab$V3)
-  # print("ok")
-  return (d)
-}
+
 
 for (i in 1:20){
-  readDf(paste("C:/Users/wafa_/TSP_benchmark/samples 25/ConcordeFile",i,".tsp"))
+  data <- tspFromFile(paste("C:/Users/Syncrossus/Documents/GitHub/TSP_benchmark/samples 25/ConcordeFile",i,".tsp"))
+  
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ?tsp
