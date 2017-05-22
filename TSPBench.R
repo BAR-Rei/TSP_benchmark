@@ -97,7 +97,7 @@ benchTSPsForN <- function(n, it=20){
     data <- tspFromFile(paste("C:/Users/Syncrossus/Documents/GitHub/TSP_benchmark/samples", n, "/","ConcordeFile",i,".tsp", sep = ""), n)
     optimalIndexes <- tspFromCyc(paste("C:/Users/Syncrossus/Documents/GitHub/TSP_benchmark/samples", n, "/",i,".cyc", sep = ""), n)
     optimalIndexes <- optimalIndexes+1 # on passe d'indices debutant a 0 a des indices debutant a 1
-    dataOptimal <- data[optimalIndexes,]
+    dataOptimal <- data[match(optimalIndexes, row(data)),]
     
     randomTours <- c(randomTours, randTourLen(data))
     optTours <- c(optTours, tourLen(data))
